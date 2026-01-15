@@ -57,7 +57,6 @@ export function LoanSelectorModal({ onClose }: LoanSelectorModalProps) {
     const result = await runSeedWithReset();
 
     if (result.success) {
-      setSelectedLoanId(null);
       await refetch();
     } else {
       setSeedError(result.error || 'Failed to seed data');
@@ -211,7 +210,7 @@ export function LoanSelectorModal({ onClose }: LoanSelectorModalProps) {
           cancelLabel="Cancel"
           onConfirm={handleSeedData}
           onCancel={() => setShowSeedConfirm(false)}
-          variant="danger"
+          confirmVariant="danger"
         />
       )}
     </div>

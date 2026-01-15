@@ -77,7 +77,7 @@ export function SimpleRichTextEditor({
   useEffect(() => {
     if (editor && content !== editor.getHTML()) {
       isExternalUpdate.current = true;
-      editor.commands.setContent(content, false);
+      editor.commands.setContent(content, { emitUpdate: false });
       isExternalUpdate.current = false;
     }
   }, [content, editor]);

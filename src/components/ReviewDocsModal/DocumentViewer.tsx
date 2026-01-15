@@ -94,7 +94,7 @@ export function DocumentViewer({
 
     return (
       <PdfCanvasRenderer
-        pdfUrl={document.file_url!}
+        pdfUrl={document!.file_url!}
         pageNumber={actualPageNumber}
         scale={zoom}
         onPdfLoaded={isPreviewMode ? undefined : handlePdfLoaded}
@@ -113,7 +113,7 @@ export function DocumentViewer({
 
     return (
       <PdfPageThumbnails
-        pdfUrl={document.file_url!}
+        pdfUrl={document!.file_url!}
         totalPages={totalPages}
         currentPage={currentPage}
         onPageSelect={onPageChange}

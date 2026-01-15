@@ -198,7 +198,7 @@ export function NoteEditor({
   useEffect(() => {
     if (editor && value !== editor.getHTML()) {
       isExternalUpdate.current = true;
-      editor.commands.setContent(value, false);
+      editor.commands.setContent(value, { emitUpdate: false });
       isExternalUpdate.current = false;
     }
   }, [value, editor]);
