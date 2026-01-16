@@ -1,12 +1,13 @@
 import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
 import { supabase } from '../lib/supabase';
-import type { Loan } from '../types/conditions';
+import type { Loan, LoanStatus } from '../types/conditions';
 
 interface LoanContextType {
   selectedLoanId: string | null;
   setSelectedLoanId: (id: string) => void;
   selectedLoan: Loan | null;
   loading: boolean;
+  updateLoanStatus: (status: LoanStatus) => Promise<boolean>;
 }
 
 const LoanContext = createContext<LoanContextType | null>(null);
@@ -79,6 +80,23 @@ export function LoanProvider({ children }: { children: ReactNode }) {
     localStorage.setItem(STORAGE_KEY, id);
   }
 
+  async function updateLoanStatus(status: LoanStatus): Promise<boolean> {
+    if (!selectedLoanId) return false;
+
+    const { error } = await supabase
+      .from('loans')
+      .update({ status })
+      .eq('id', selectedLoanId);
+
+    if (error) {
+      console.error('Error updating loan status:', error);
+      return false;
+    }
+
+    setSelectedLoan((prev) => (prev ? { ...prev, status } : prev));
+    return true;
+  }
+
   return (
     <LoanContext.Provider
       value={{
@@ -86,6 +104,7 @@ export function LoanProvider({ children }: { children: ReactNode }) {
         setSelectedLoanId,
         selectedLoan,
         loading,
+        updateLoanStatus,
       }}
     >
       {children}

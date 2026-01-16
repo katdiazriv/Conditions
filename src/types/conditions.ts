@@ -438,3 +438,12 @@ export interface PendingDocumentAssociation {
   pendingStatus: ConditionStatus | null;
   isNew: boolean;
 }
+
+export interface LoanTeamMember {
+  id: string;
+  loan_id: string;
+  name: string;
+  role: string;
+  email: string | null;
+  created_at: string;
+}

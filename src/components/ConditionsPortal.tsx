@@ -19,6 +19,7 @@ import { UploadDocumentsModal } from './UploadDocumentsModal';
 import { BulkActionsBar } from './BulkActionsBar';
 import { ConfirmationDialog } from './ConfirmationDialog';
 import { NotesModal } from './NotesModal';
+import { SubmitToUWModal } from './SubmitToUWModal';
 import type { Stage, ConditionStatus, FlagColor, DocRequest } from '../types/conditions';
 import type { NotesModalEntryPoint } from '../types/notes';
 
@@ -73,6 +74,7 @@ export function ConditionsPortal() {
   const [showNotesModal, setShowNotesModal] = useState(false);
   const [notesModalEntryPoint, setNotesModalEntryPoint] = useState<NotesModalEntryPoint>('bell');
   const [notesModalConditionId, setNotesModalConditionId] = useState<string | null>(null);
+  const [showSubmitToUWModal, setShowSubmitToUWModal] = useState(false);
 
   const allStages: Stage[] = [
     'Suspend',
@@ -288,6 +290,7 @@ export function ConditionsPortal() {
         onBulkUpload={handleBulkUpload}
         onOpenNotesModal={() => handleOpenNotesModal('bell')}
         unreadNotesCount={unreadNotesCount}
+        onSubmitToUW={() => setShowSubmitToUWModal(true)}
       />
 
       {selectedConditions.size > 0 && (
@@ -446,6 +449,12 @@ export function ConditionsPortal() {
         onClose={handleCloseNotesModal}
         entryPoint={notesModalEntryPoint}
         conditionId={notesModalConditionId}
+      />
+
+      <SubmitToUWModal
+        isOpen={showSubmitToUWModal}
+        onClose={() => setShowSubmitToUWModal(false)}
+        onSubmitComplete={refetch}
       />
     </div>
   );

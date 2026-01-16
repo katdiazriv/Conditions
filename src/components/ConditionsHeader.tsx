@@ -37,6 +37,7 @@ interface ConditionsHeaderProps {
   onBulkUpload: (files: File[]) => void;
   onOpenNotesModal: () => void;
   unreadNotesCount: number;
+  onSubmitToUW: () => void;
 }
 
 const VIEW_OPTIONS: { value: ViewFilter; label: string }[] = [
@@ -61,6 +62,7 @@ export function ConditionsHeader({
   onBulkUpload,
   onOpenNotesModal,
   unreadNotesCount,
+  onSubmitToUW,
 }: ConditionsHeaderProps) {
   const { permissions } = useRoleContext();
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -246,7 +248,7 @@ export function ConditionsHeader({
             Add Conditions
           </Button>
 
-          <Button variant="primary">
+          <Button variant="primary" onClick={onSubmitToUW}>
             <span>Submit to UW</span>
             <ChevronDown className="w-4 h-4 inline-block ml-1" />
           </Button>
