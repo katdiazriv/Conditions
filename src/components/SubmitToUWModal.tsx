@@ -2,10 +2,12 @@ import { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import { Button } from './Button';
 import { NoteEditorWithMentions } from './NoteEditorWithMentions';
+import { Dropdown } from './Dropdown';
 import { useLoanTeamMembers } from '../hooks/useLoanTeamMembers';
 import { useLoanContext } from '../contexts/LoanContext';
 import { useRoleContext } from '../contexts/RoleContext';
 import { getAuthorNameForRole } from '../types/roles';
+import { LOAN_STATUS_OPTIONS, type LoanStatus } from '../types/conditions';
 import { supabase } from '../lib/supabase';
 
 interface SubmitToUWModalProps {
@@ -19,7 +21,13 @@ export function SubmitToUWModal({ isOpen, onClose, onSubmitComplete }: SubmitToU
   const { selectedRole } = useRoleContext();
   const { members } = useLoanTeamMembers(selectedLoanId);
   const [noteContent, setNoteContent] = useState('');
+  const [selectedStatus, setSelectedStatus] = useState<LoanStatus>('UW Received');
   const [submitting, setSubmitting] = useState(false);
+
+  const statusOptions = LOAN_STATUS_OPTIONS.map((status) => ({
+    value: status,
+    label: status,
+  }));
 
   useEffect(() => {
     if (isOpen) {
@@ -47,6 +55,7 @@ export function SubmitToUWModal({ isOpen, onClose, onSubmitComplete }: SubmitToU
   useEffect(() => {
     if (!isOpen) {
       setNoteContent('');
+      setSelectedStatus('UW Received');
     }
   }, [isOpen]);
 
@@ -54,7 +63,7 @@ export function SubmitToUWModal({ isOpen, onClose, onSubmitComplete }: SubmitToU
     if (submitting) return;
     setSubmitting(true);
 
-    const statusUpdated = await updateLoanStatus('UW Received');
+    const statusUpdated = await updateLoanStatus(selectedStatus);
     if (!statusUpdated) {
       setSubmitting(false);
       return;
@@ -96,13 +105,21 @@ export function SubmitToUWModal({ isOpen, onClose, onSubmitComplete }: SubmitToU
         </div>
 
         <div className="p-6 space-y-4">
-          <p className="text-sm text-gray-700">
-            An Initial Submission will update the loan status to <span className="font-semibold">'UW Received'</span>.
+          <p className="text-sm text-gray-600">
+            Please select the loan status and add any relevant notes for the underwriter prior to submission.
           </p>
 
-          <p className="text-sm text-gray-600">
-            Please add any relevant loan notes for the underwriter prior to submission.
-          </p>
+          <div className="space-y-2">
+            <label className="block text-sm font-medium text-gray-700">
+              Loan Status
+            </label>
+            <Dropdown
+              options={statusOptions}
+              value={selectedStatus}
+              onChange={(value) => setSelectedStatus(value as LoanStatus)}
+              placeholder="Select status"
+            />
+          </div>
 
           <div className="space-y-2">
             <label className="block text-sm font-medium text-gray-700">
